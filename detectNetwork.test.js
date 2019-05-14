@@ -206,7 +206,7 @@ describe('Maestro', function() {
          expect(detectNetwork(card)).to.equal('Maestro');
       });
     })(len, card)
-    card = card + '0';
+    card += '0';
    }
 
 
@@ -218,7 +218,7 @@ describe('Maestro', function() {
          expect(detectNetwork(card)).to.equal('Maestro');
        });
      })(len, card)
-     card = card + '0';
+     card += '0';
     }
 
 
@@ -230,7 +230,7 @@ describe('Maestro', function() {
           expect(detectNetwork(card)).to.equal('Maestro');
         });
       })(len, card)
-      card = card + '0';
+      card += '0';
      }
 
      //6304
@@ -241,13 +241,101 @@ describe('Maestro', function() {
           expect(detectNetwork(card)).to.equal('Maestro');
         });
       })(len, card)
-      card = card + '0';
+      card += '0';
      }
 });
-// describe('China UnionPay', function() {
-//   var expect = chai.expect;
-//
-//   //len 16-19
-//   //prefix 622126-622925
-//
-// });
+
+describe('China UnionPay', function() {
+  var expect = chai.expect;
+
+  //China UnionPay always has a prefix of 622126-622925, 624-626, or 6282-6288 and a length of 16-19.
+  //622126-622925
+  for(let prefix = 622126; prefix <= 622925; prefix++){
+    let card = prefix + '1234567890';
+    for(let len = 16; len <= 19; len++){
+      (function(len, card, prefix){
+        it('has a prefix of ' + prefix + ' and a length of ' + len, function(){
+          expect(detectNetwork(card)).to.equal('China UnionPay');
+        });
+      })(len, card, prefix)
+      card += '0';
+    }
+  }
+
+  //624-626
+  for(let prefix = 624; prefix <= 626; prefix++){
+    let card = prefix + '1234567890123';
+    for(let len = 16; len <= 19; len++){
+      (function(len, card, prefix){
+        it('has a prefix of ' + prefix + ' and a length of ' + len, function(){
+          expect(detectNetwork(card)).to.equal('China UnionPay');
+        });
+      })(len, card, prefix)
+      card += '0';
+    }
+  }
+
+  //6282-6288
+  for(let prefix = 6282; prefix <= 6288; prefix++){
+    let card = prefix + '123456789012';
+    for(let len = 16; len <= 19; len++){
+      (function(len, card, prefix){
+        it('has a prefix of ' + prefix + ' and a length of ' + len, function(){
+          expect(detectNetwork(card)).to.equal('China UnionPay');
+        });
+      })(len, card, prefix)
+      card += '0';
+     }
+   }
+
+
+});
+
+
+describe('Switch', function() {
+
+  var expect = chai.expect;
+
+  //Switch: (prefix) 4903, 4905, 4911, 4936, 564182, 633110, 6333, 6759 + (length) 16, 18, or 19
+
+  /*Pseudo-code:
+  1) let all prefix into an array and loop thru array to get each prefix
+  2) define the card with qualified length by appending 0's after the prefix
+  3) use full test coverage function like above for the test with @card, prefix[i]
+  */
+  let prefixes = [4903, 4905, 4911, 4936, 564182, 633110, 6333, 6759];
+
+  for(let i = 0; i < prefixes.length; ++i){
+    let prefix = prefixes[i].toString(); //convert 4903 -> '4903'
+
+    //define card starting with prefix up to len == 16
+    let card = prefix;
+    for(let j = 0; j < 16-prefix.length; j++){
+      card += '0';
+    }
+
+    //len == 16
+    (function(card, prefix){
+      it('has a prefix of ' + prefix + ' and a length of 16', function(){
+        expect(detectNetwork(card)).to.equal('Switch');
+      });
+    })(card, prefixes[i])
+
+    //len == 18
+    card = card + '23'; //make a 18-length string
+    (function(card, prefix){
+      it('has a prefix of ' + prefix + ' and a length of 18', function(){
+        expect(detectNetwork(card)).to.equal('Switch');
+      });
+    })(card, prefixes[i])
+
+    //len == 19
+    card = card + '2'; //make a 19-length string by adding 1 more char into current card str
+    (function(card, prefix){
+      it('has a prefix of ' + prefix + ' and a length of 19', function(){
+        expect(detectNetwork(card)).to.equal('Switch');
+      });
+    })(card, prefixes[i])
+   }
+
+});

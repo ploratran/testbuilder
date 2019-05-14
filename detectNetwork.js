@@ -75,18 +75,19 @@ var detectNetwork = function(cardNumber) {
       && (cardNumber.length >= 16 && cardNumber.length <= 19)){
     cardNetwork = 'China UnionPay';
   }
-  //
-  // //case 8: Switch
+
+
+  //Case 8: Switch
   //Switch always has a prefix of 4903, 4905, 4911, 4936, 564182, 633110, 6333, or 6759
   //and a length of 16, 18, or 19
-  // let prefixS1 = JSON.parse(cardNumber.slice(0,4)); //4903 4905 4911 4936 6333 6759
-  // let prefixS2 = JSON.parse(cardNumber.slice(0,6)); //564182 633110
-  // if((prefixS1 === 4903 || prefixS1 === 4905 || prefixS1 === 4911
-  //     || prefixS1 === 4936 || prefixS1 === 6333 || prefixS1 === 6759
-  //     || prefixS2 === 564182 || prefixS2 === 633110)
-  //   && (cardNumber.length == 16 || cardNumber.length == 18 || cardNumber.length == 19)){
-  //   cardNetwork = 'Switch';
-  // }
+  let prefixS1 = JSON.parse(cardNumber.slice(0,4)); //4903 4905 4911 4936 6333 6759
+  let prefixS2 = JSON.parse(cardNumber.slice(0,6)); //564182 633110
+  if((prefixS1 === 4903 || prefixS1 === 4905 || prefixS1 === 4911
+      || prefixS1 === 4936 || prefixS1 === 6333 || prefixS1 === 6759
+      || prefixS2 === 564182 || prefixS2 === 633110)
+    && (cardNumber.length == 16 || cardNumber.length == 18 || cardNumber.length == 19)){
+    cardNetwork = 'Switch';
+  }
 
   return cardNetwork;
 };
